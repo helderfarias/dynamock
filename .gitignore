@@ -1,0 +1,5 @@
+vendor/
+debug
+build
+bin
+.DS_Store

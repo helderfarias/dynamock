@@ -1,0 +1,36 @@
+{
+    "port": "3010",
+    "latency": 30,
+    "services": {        
+        "ping": {
+            "verbs": ["get"],
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200, 
+                    "result": "json"
+                 }
+            }
+        },
+        "api/:id/services": {
+            "verbs": ["get"],
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200, 
+                    "result": "{\"id\": 1, \"name\": \"service\"}"
+                 }
+            }
+        },
+        "api/:id/files": {
+            "verbs": ["get"],
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200, 
+                    "file": "templates/mock/files.json"
+                 }
+            }
+        }        
+    }
+}
