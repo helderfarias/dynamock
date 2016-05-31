@@ -6,7 +6,6 @@ func (t *CliSuite) TestShouldBeCreateEnpointWithMethodGet() {
 	api := &EndpointFactory{
 		uri: "api/ping",
 		service: &Service{
-			Verbs: []string{"get"},
 			Responses: map[string]Response{
 				"get": Response{Status: 200},
 			},

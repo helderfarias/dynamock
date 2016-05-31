@@ -1,36 +1,46 @@
 {
     "port": "3010",
     "latency": 30,
-    "services": {        
+    "contentType": "application/json",
+    "services": {
         "ping": {
-            "verbs": ["get"],
             "contentType": "application/json",
             "responses": {
                 "get": {
-                    "status": 200, 
-                    "result": "json"
+                    "status": 200,
+                    "body": "json"
                  }
             }
         },
         "api/:id/services": {
-            "verbs": ["get"],
             "contentType": "application/json",
             "responses": {
                 "get": {
-                    "status": 200, 
-                    "result": "{\"id\": 1, \"name\": \"service\"}"
+                    "status": 200,
+                    "body": "{\"id\": 1, \"name\": \"service\"}"
                  }
             }
         },
         "api/:id/files": {
-            "verbs": ["get"],
             "contentType": "application/json",
             "responses": {
                 "get": {
-                    "status": 200, 
-                    "file": "templates/mock/files.json"
+                    "status": 200,
+                    "bodyFile": "templates/mock/files.json"
                  }
             }
-        }        
+        },
+        "search": {
+            "responses": {
+                "get": {
+                    "dynamic": {
+                        "random": {
+                            "status": [200],
+                            "body": ["ok"]
+                        }
+                    }
+                 }
+            }
+        }
     }
 }

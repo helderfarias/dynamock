@@ -1,7 +1,8 @@
 package cli
 
 type Response struct {
-	Status int
-	Result string
-	File   string
+	Status   int
+	Body     string
+	BodyFile string
+	Dynamic  map[string]interface{}
 }

@@ -1,7 +1,8 @@
 package cli
 
 type Configuration struct {
-	Port     string
-	Latency  int
-	Services map[string]Service
+	Port        string
+	Latency     int
+	ContentType string
+	Services    map[string]Service
 }

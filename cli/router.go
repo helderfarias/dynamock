@@ -17,8 +17,8 @@ type RouterSettings struct {
 	Uri         string
 	ContentType string
 	Status      int
-	Result      string
-	File        string
+	Body        string
+	BodyFile    string
 	Latency     int
 }
 
@@ -38,17 +38,17 @@ func (r *routerFactory) CreateGET(data *RouterSettings) {
 		if data.ContentType == "application/json" {
 			var result interface{}
 
-			if len(data.File) > 0 {
-				result = r.parseFile(data.File)
+			if len(data.BodyFile) > 0 {
+				result = r.parseFile(data.BodyFile)
 			} else {
-				result = data.Result
+				result = data.Body
 			}
 
 			c.JSON(data.Status, result)
 			return
 		}
 
-		c.String(data.Status, data.Result)
+		c.String(data.Status, data.Body)
 	})
 
 }

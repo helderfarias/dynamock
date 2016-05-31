@@ -12,9 +12,10 @@ func Run(config *Configuration) {
 
 	for uri, settings := range config.Services {
 		api := &EndpointFactory{
-			uri:     uri,
-			service: &settings,
-			latency: config.Latency,
+			uri:         uri,
+			service:     &settings,
+			latency:     config.Latency,
+			contentType: config.ContentType,
 		}
 
 		api.register(router)
