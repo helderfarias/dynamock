@@ -30,13 +30,64 @@
                  }
             }
         },
-        "search": {
+        "dyn1": {
             "responses": {
                 "get": {
                     "dynamic": {
                         "random": {
-                            "status": [200],
-                            "body": ["ok"]
+                            "status": [200, 201],
+                            "body": ["ok1", "ok2", "ok3"]
+                        }
+                    }
+                 }
+            }
+        },
+        "dyn2": {
+            "responses": {
+                "get": {
+                    "dynamic": {
+                        "random": {
+                            "status": [200, 201, 500],
+                            "bodyFile": [
+                                "templates/mock/dyn.1.json",
+                                "templates/mock/dyn.2.json"
+                            ]
+                        }
+                    }
+                 }
+            }
+        },
+        "headers": {
+            "contentType": "application/json",
+            "headers": {
+                "x-requested-by": "a1334c7dh3a8",
+                "authorization": "Bearer a1334c7dh3a8"
+            },
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "bodyFile": "templates/mock/files.json"
+                 }
+            }
+        },
+        "switch": {
+            "contentType": "application/json",
+            "headers": {
+                "x-requested-by": "a1334c7dh3a8",
+                "authorization": "Bearer a1334c7dh3a8"
+            },
+            "responses": {
+                 "get": {
+                    "dynamic": {
+                        "switch": {
+                            "id": [
+                                {"if": "1", "when": {"status": 200, "body": "ok1"}},
+                                {"if": "2", "when": {"status": 200, "body": "ok2"}},
+                                {"if": "3", "when": {"status": 200, "body": "ok3"}}
+                            ],
+                            "name": [
+                                {"if": "go", "when": {"status": 500, "bodyFile": "templates/mock/error.json"}}
+                            ]
                         }
                     }
                  }

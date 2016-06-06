@@ -3,3 +3,4 @@ import:
 - package: gopkg.in/check.v1
 - package: github.com/codegangsta/cli
 - package: github.com/gin-gonic/gin
+- package: github.com/mitchellh/mapstructure

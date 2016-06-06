@@ -16,6 +16,8 @@ func (e *EndpointFactory) register(router RouterFactory) {
 			Latency:     e.latency,
 			Body:        resp.Body,
 			BodyFile:    resp.BodyFile,
+			Dynamic:     resp.Dynamic,
+			Headers:     e.getHeaders(&resp),
 		})
 	}
 }
@@ -30,4 +32,16 @@ func (e *EndpointFactory) getContentType() string {
 	}
 
 	return contentType
+}
+
+func (e *EndpointFactory) getHeaders(r *Response) map[string]string {
+	var headers map[string]string
+
+	if len(e.service.Headers) > 0 {
+		headers = e.service.Headers
+	} else {
+		headers = r.Headers
+	}
+
+	return headers
 }
