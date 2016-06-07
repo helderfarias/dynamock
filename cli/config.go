@@ -5,4 +5,5 @@ type Configuration struct {
 	Latency     int
 	ContentType string
 	Services    map[string]Service
+	MockDir     string
 }

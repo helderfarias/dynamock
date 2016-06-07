@@ -16,6 +16,7 @@ func Run(config *Configuration) {
 			service:     &settings,
 			latency:     config.Latency,
 			contentType: config.ContentType,
+			mockDir:     config.MockDir,
 		}
 
 		api.register(router)

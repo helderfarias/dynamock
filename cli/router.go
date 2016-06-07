@@ -23,6 +23,7 @@ type RouterSettings struct {
 	Latency     int
 	Dynamic     map[string]interface{}
 	Headers     map[string]string
+	MockDir     string
 }
 
 type routerFactory struct {
@@ -82,13 +83,21 @@ func (r *routerFactory) execute(c *gin.Context, data *RouterSettings) {
 func (r *routerFactory) createDynamic(c *gin.Context, data *RouterSettings) (int, interface{}) {
 	for key, input := range data.Dynamic {
 		if key == "random" {
-			plugin := &RandomPlugin{}
+			plugin := &RandomPlugin{
+				MockDir: data.MockDir,
+			}
+
 			mapstructure.Decode(input, plugin)
 			return plugin.Create()
 		}
 
 		if key == "switch" {
-			plugin := &SwitchPlugin{Context: c, Input: input}
+			plugin := &SwitchPlugin{
+				Context: c,
+				Input:   input,
+				MockDir: data.MockDir,
+			}
+
 			return plugin.Create()
 		}
 

@@ -12,11 +12,13 @@ type RandomPlugin struct {
 	Status   []int
 	Body     []string
 	BodyFile []string
+	MockDir  string
 }
 
 type SwitchPlugin struct {
 	Input   interface{}
 	Context *gin.Context
+	MockDir string
 }
 
 type Action struct {
@@ -42,7 +44,7 @@ func (r *RandomPlugin) Create() (int, interface{}) {
 	return createSingleResult(&RouterSettings{
 		Status:   status,
 		Body:     body,
-		BodyFile: bodyFile,
+		BodyFile: makeBodyFile(r.MockDir, bodyFile),
 	})
 }
 
@@ -80,7 +82,7 @@ func (s *SwitchPlugin) Create() (int, interface{}) {
 				return createSingleResult(&RouterSettings{
 					Status:   action.When.Status,
 					Body:     action.When.Body,
-					BodyFile: action.When.BodyFile,
+					BodyFile: makeBodyFile(s.MockDir, action.When.BodyFile),
 				})
 			}
 		}

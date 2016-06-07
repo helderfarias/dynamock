@@ -2,6 +2,7 @@
     "port": "3010",
     "latency": 30,
     "contentType": "application/json",
+    "mockDir": "templates/mock",
     "services": {
         "ping": {
             "contentType": "application/json",
@@ -35,7 +36,7 @@
             "responses": {
                 "get": {
                     "status": 200,
-                    "bodyFile": "templates/mock/files.json"
+                    "bodyFile": "files.json"
                  }
             }
         },
@@ -58,8 +59,8 @@
                         "random": {
                             "status": [200, 201, 500],
                             "bodyFile": [
-                                "templates/mock/dyn.1.json",
-                                "templates/mock/dyn.2.json"
+                                "dyn.1.json",
+                                "dyn.2.json"
                             ]
                         }
                     }
@@ -75,7 +76,7 @@
             "responses": {
                 "get": {
                     "status": 200,
-                    "bodyFile": "templates/mock/files.json"
+                    "bodyFile": "files.json"
                  }
             }
         },
@@ -95,7 +96,7 @@
                                 {"if": "3", "when": {"status": 200, "body": "ok3"}}
                             ],
                             "name": [
-                                {"if": "go", "when": {"status": 500, "bodyFile": "templates/mock/error.json"}}
+                                {"if": "go", "when": {"status": 500, "bodyFile": "error.json"}}
                             ]
                         }
                     }

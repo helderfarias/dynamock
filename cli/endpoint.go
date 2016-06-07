@@ -5,6 +5,7 @@ type EndpointFactory struct {
 	service     *Service
 	latency     int
 	contentType string
+	mockDir     string
 }
 
 func (e *EndpointFactory) register(router RouterFactory) {
@@ -18,6 +19,7 @@ func (e *EndpointFactory) register(router RouterFactory) {
 			BodyFile:    resp.BodyFile,
 			Dynamic:     resp.Dynamic,
 			Headers:     e.getHeaders(&resp),
+			MockDir:     e.mockDir,
 		}
 
 		if method == "get" {
