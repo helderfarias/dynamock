@@ -9,7 +9,7 @@
                 "get": {
                     "status": 200,
                     "body": "json"
-                 }
+                }
             }
         },
         "api/:id/services": {
@@ -18,7 +18,16 @@
                 "get": {
                     "status": 200,
                     "body": "{\"id\": 1, \"name\": \"service\"}"
-                 }
+                },
+                "post": {
+                    "status": 200
+                },
+                "put": {
+                    "status": 200
+                },
+                "delete": {
+                    "status": 200
+                }
             }
         },
         "api/:id/files": {

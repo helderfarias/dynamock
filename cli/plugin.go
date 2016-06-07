@@ -1,11 +1,11 @@
 package cli
 
 import (
-	"log"
 	"math/rand"
 	"time"
 
 	"github.com/gin-gonic/gin"
+	"github.com/mitchellh/mapstructure"
 )
 
 type RandomPlugin struct {
@@ -15,7 +15,7 @@ type RandomPlugin struct {
 }
 
 type SwitchPlugin struct {
-	Input   map[string][]Action
+	Input   interface{}
 	Context *gin.Context
 }
 
@@ -30,25 +30,61 @@ func init() {
 
 func (r *RandomPlugin) Create() (int, interface{}) {
 	status := r.Status[rand.Intn(len(r.Status))]
+	body := ""
+	bodyFile := ""
 
-	var data interface{}
 	if len(r.Body) > 0 {
-		data = r.Body[rand.Intn(len(r.Body))]
+		body = r.Body[rand.Intn(len(r.Body))]
 	} else if len(r.BodyFile) > 0 {
-		bodyFile := r.BodyFile[rand.Intn(len(r.BodyFile))]
-		data = parseFile(bodyFile)
+		bodyFile = r.BodyFile[rand.Intn(len(r.BodyFile))]
 	}
 
-	return status, data
+	return createSingleResult(&RouterSettings{
+		Status:   status,
+		Body:     body,
+		BodyFile: bodyFile,
+	})
 }
 
 func (s *SwitchPlugin) Create() (int, interface{}) {
-	for key, actions := range s.Input {
-		// param := s.Context.Query(key)
-		log.Println(key, actions)
+	mapper := make(map[string][]Action, 0)
+	params := make(map[string]string, 0)
+
+	for key, value := range s.Input.(map[string]interface{}) {
+		var actions []Action
+
+		for _, data := range value.([]interface{}) {
+			var action Action
+			mapstructure.Decode(data, &action)
+			actions = append(actions, action)
+		}
+
+		mapper[key] = actions
 	}
 
-	log.Println(s.Input)
+	for key := range mapper {
+		query := s.Context.Query(key)
+		if len(query) > 0 {
+			params[key] = query
+		}
 
-	return 0, nil
+		param := s.Context.Param(key)
+		if len(param) > 0 {
+			params[key] = param
+		}
+	}
+
+	for key, value := range params {
+		for _, action := range mapper[key] {
+			if action.If == value {
+				return createSingleResult(&RouterSettings{
+					Status:   action.When.Status,
+					Body:     action.When.Body,
+					BodyFile: action.When.BodyFile,
+				})
+			}
+		}
+	}
+
+	return 404, "action not found"
 }

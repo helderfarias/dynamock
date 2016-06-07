@@ -1,7 +1,6 @@
 package cli
 
 import (
-	"log"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -10,6 +9,9 @@ import (
 
 type RouterFactory interface {
 	CreateGET(settings *RouterSettings)
+	CreatePOST(settings *RouterSettings)
+	CreatePUT(settings *RouterSettings)
+	CreateDELETE(settings *RouterSettings)
 }
 
 type RouterSettings struct {
@@ -32,24 +34,49 @@ func NewRouterFactory(s *gin.Engine) RouterFactory {
 }
 
 func (r *routerFactory) CreateGET(data *RouterSettings) {
-
 	r.server.GET(data.Uri, func(c *gin.Context) {
 		r.setLatency(c, data)
 		r.setHeaders(c, data)
+		r.execute(c, data)
+	})
+}
 
-		if data.ContentType == "application/json" {
-			if len(data.Dynamic) > 0 {
-				c.JSON(r.createDynamic(c, data))
-				return
-			}
+func (r *routerFactory) CreatePOST(data *RouterSettings) {
+	r.server.POST(data.Uri, func(c *gin.Context) {
+		r.setLatency(c, data)
+		r.setHeaders(c, data)
+		r.execute(c, data)
+	})
+}
 
-			c.JSON(createSingleResult(data))
+func (r *routerFactory) CreatePUT(data *RouterSettings) {
+	r.server.PUT(data.Uri, func(c *gin.Context) {
+		r.setLatency(c, data)
+		r.setHeaders(c, data)
+		r.execute(c, data)
+	})
+}
+
+func (r *routerFactory) CreateDELETE(data *RouterSettings) {
+	r.server.DELETE(data.Uri, func(c *gin.Context) {
+		r.setLatency(c, data)
+		r.setHeaders(c, data)
+		r.execute(c, data)
+	})
+}
+
+func (r *routerFactory) execute(c *gin.Context, data *RouterSettings) {
+	if data.ContentType == "application/json" {
+		if len(data.Dynamic) > 0 {
+			c.JSON(r.createDynamic(c, data))
 			return
 		}
 
-		c.String(data.Status, data.Body)
-	})
+		c.JSON(createSingleResult(data))
+		return
+	}
 
+	c.String(data.Status, data.Body)
 }
 
 func (r *routerFactory) createDynamic(c *gin.Context, data *RouterSettings) (int, interface{}) {
@@ -61,13 +88,7 @@ func (r *routerFactory) createDynamic(c *gin.Context, data *RouterSettings) (int
 		}
 
 		if key == "switch" {
-			var raw map[string]interface{}
-
-			mapstructure.Decode(input, raw)
-
-			log.Println(raw)
-
-			plugin := &SwitchPlugin{Context: c}
+			plugin := &SwitchPlugin{Context: c, Input: input}
 			return plugin.Create()
 		}
 
