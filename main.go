@@ -35,7 +35,9 @@ func main() {
 		defer configFile.Close()
 
 		if err != nil {
-			log.Println("opening config file", err.Error())
+			log.Println("Opening config file: ", err.Error())
+			log.Println("Usage dynamock -h")
+			os.Exit(1)
 		}
 
 		config := cli.Configuration{}
