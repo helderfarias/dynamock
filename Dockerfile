@@ -19,12 +19,15 @@ RUN cd src/github.com/helderfarias/dynamock \
 RUN cd src/github.com/helderfarias/dynamock \
     && cp dynamock /usr/bin/dynamock \
     && chmod +x /usr/bin/dynamock \
-    && rm -rf src/* /usr/bin/glide
+    && rm -rf /go
 
+COPY entrypoint.sh /entrypoint.sh
 COPY templates /templates
+RUN chmod +x /entrypoint.sh
 
 VOLUME /templates
 
 EXPOSE 3010
 
-CMD ["dynamock -c /templates/sample.json"]
+CMD "/entrypoint.sh"
+

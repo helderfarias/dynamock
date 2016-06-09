@@ -4,3 +4,5 @@ build
 bin
 .DS_Store
 glide.lock
+dynamock_*.zip
+dynamock.exe

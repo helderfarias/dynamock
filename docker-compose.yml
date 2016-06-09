@@ -1,0 +1,9 @@
+version: '2'
+services:
+    dynamock:
+        build: .
+        image: dynamock
+        ports:
+            - 3010:3010
+
+

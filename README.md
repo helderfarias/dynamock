@@ -125,6 +125,19 @@ On startup, config values are loaded from the config.json file.
 }
 ```
 
+### Usage
+```bash
+# compose
+docker-compose up -d
+
+# docker
+docker build -t dynamock .
+docker run -d -p 3010:3010 dynamock
+
+# binary
+
+```
+
 
 ### Inspired
 https://github.com/gstroup/apimocker 
