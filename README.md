@@ -135,7 +135,9 @@ docker build -t dynamock .
 docker run -d -p 3010:3010 dynamock
 
 # binary
-
+curl -L https://github.com/helderfarias/dynamock/releases/download/v1.0/dynamock_darwin_osx.zip > dynamock.zip \
+    && unzip dynamock.zip \
+    && rm dynamock.zip
 ```
 
 
