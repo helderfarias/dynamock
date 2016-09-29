@@ -13,6 +13,7 @@ func CorsMiddleware(cfg *Cors) gin.HandlerFunc {
 			c.Writer.Header().Add("Access-Control-Allow-Origin", cfg.AllowOrigin)
 			c.Writer.Header().Add("Access-Control-Allow-Headers", cfg.AllowHeaders)
 			c.Writer.Header().Add("Access-Control-Allow-Methods", cfg.AllowMethods)
+			c.Writer.Header().Add("Access-Control-Allow-Credentials", cfg.AllowCredentials)
 			c.Writer.Header().Add("Access-Control-Expose-Headers", cfg.ExposeHeaders)
 			c.Next()
 			return
@@ -21,6 +22,7 @@ func CorsMiddleware(cfg *Cors) gin.HandlerFunc {
 		c.Writer.Header().Add("Access-Control-Allow-Origin", cfg.AllowOrigin)
 		c.Writer.Header().Add("Access-Control-Allow-Headers", cfg.AllowHeaders)
 		c.Writer.Header().Add("Access-Control-Allow-Methods", cfg.AllowMethods)
+		c.Writer.Header().Add("Access-Control-Allow-Credentials", cfg.AllowCredentials)
 		c.Writer.Header().Add("Access-Control-Expose-Headers", cfg.ExposeHeaders)
 		c.Next()
 	}

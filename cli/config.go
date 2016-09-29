@@ -1,10 +1,11 @@
 package cli
 
 type Cors struct {
-	AllowOrigin   string `json:"allow_origin"`
-	AllowHeaders  string `json:"allow_headers"`
-	AllowMethods  string `json:"allow_methods"`
-	ExposeHeaders string `json:"expose_headers"`
+	AllowOrigin      string `json:"allow_origin"`
+	AllowHeaders     string `json:"allow_headers"`
+	AllowMethods     string `json:"allow_methods"`
+	AllowCredentials string `json:"allow_credentials"`
+	ExposeHeaders    string `json:"expose_headers"`
 }
 
 type Configuration struct {

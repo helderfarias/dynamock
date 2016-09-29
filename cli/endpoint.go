@@ -6,6 +6,7 @@ type EndpointFactory struct {
 	latency     int
 	contentType string
 	mockDir     string
+	cors        *Cors
 }
 
 func (e *EndpointFactory) register(router RouterFactory) {
@@ -18,7 +19,7 @@ func (e *EndpointFactory) register(router RouterFactory) {
 			Body:        resp.Body,
 			BodyFile:    resp.BodyFile,
 			Dynamic:     resp.Dynamic,
-			Headers:     e.getHeaders(&resp),
+			Headers:     e.getHeaders(&resp, e.cors),
 			MockDir:     e.mockDir,
 		}
 
@@ -52,13 +53,25 @@ func (e *EndpointFactory) getContentType() string {
 	return contentType
 }
 
-func (e *EndpointFactory) getHeaders(r *Response) map[string]string {
-	var headers map[string]string
+func (e *EndpointFactory) getHeaders(r *Response, c *Cors) map[string]string {
+	headers := make(map[string]string, 0)
 
 	if len(e.service.Headers) > 0 {
-		headers = e.service.Headers
+		for k, v := range e.service.Headers {
+			headers[k] = v
+		}
 	} else {
-		headers = r.Headers
+		for k, v := range r.Headers {
+			headers[k] = v
+		}
+	}
+
+	if c != nil {
+		headers["Access-Control-Allow-Origin"] = c.AllowOrigin
+		headers["Access-Control-Allow-Headers"] = c.AllowHeaders
+		headers["Access-Control-Allow-Methods"] = c.AllowMethods
+		headers["Access-Control-Allow-Credentials"] = c.AllowCredentials
+		headers["Access-Control-Expose-Headers"] = c.ExposeHeaders
 	}
 
 	return headers
