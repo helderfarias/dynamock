@@ -6,4 +6,5 @@ type Configuration struct {
 	ContentType string
 	Services    map[string]Service
 	MockDir     string
+	Cors        bool
 }

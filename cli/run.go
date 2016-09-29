@@ -22,5 +22,9 @@ func Run(config *Configuration) {
 		api.register(router)
 	}
 
+	if config.Cors {
+		server.Use(Cors())
+	}
+
 	server.Run(fmt.Sprintf(":%s", config.Port))
 }

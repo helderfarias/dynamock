@@ -3,6 +3,7 @@
     "latency": 30,
     "contentType": "application/json",
     "mockDir": "templates/mock",
+    "cors": true,
     "services": {
         "ping": {
             "contentType": "application/json",
