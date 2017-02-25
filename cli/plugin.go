@@ -4,7 +4,7 @@ import (
 	"math/rand"
 	"time"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo"
 	"github.com/mitchellh/mapstructure"
 )
 
@@ -17,7 +17,7 @@ type RandomPlugin struct {
 
 type SwitchPlugin struct {
 	Input   interface{}
-	Context *gin.Context
+	Context echo.Context
 	MockDir string
 }
 
@@ -65,7 +65,7 @@ func (s *SwitchPlugin) Create() (int, interface{}) {
 	}
 
 	for key := range mapper {
-		query := s.Context.Query(key)
+		query := s.Context.QueryParam(key)
 		if len(query) > 0 {
 			params[key] = query
 		}

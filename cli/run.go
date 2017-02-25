@@ -3,11 +3,11 @@ package cli
 import (
 	"fmt"
 
-	"github.com/gin-gonic/gin"
+	"github.com/labstack/echo"
 )
 
 func Run(config *Configuration) {
-	server := gin.Default()
+	server := echo.New()
 	router := NewRouterFactory(server)
 
 	for uri, settings := range config.Services {
@@ -23,9 +23,9 @@ func Run(config *Configuration) {
 		api.register(router)
 	}
 
-	if config.Cors != nil {
-		server.Use(CorsMiddleware(config.Cors))
-	}
+	// if config.Cors != nil {
+	// 	server.Use(CorsMiddleware(config.Cors))
+	// }
 
-	server.Run(fmt.Sprintf(":%s", config.Port))
+	server.Start(fmt.Sprintf(":%s", config.Port))
 }

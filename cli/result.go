@@ -23,7 +23,7 @@ func makeBodyFile(mockDir string, bodyFile string) string {
 func createSingleResult(data *RouterSettings) (int, interface{}) {
 	var result interface{}
 
-	if len(data.BodyFile) > 0 {
+	if len(data.Body) == 0 {
 		result = parseFile(makeBodyFile(data.MockDir, data.BodyFile))
 	} else {
 		result = data.Body

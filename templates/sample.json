@@ -109,6 +109,51 @@
                     }
                  }
             }
+        },
+        "api/:id/services/:work/works": {
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "body": "{\"id\": 1, \"name\": \"service\"}"
+                },
+                "post": {
+                    "status": 200
+                },
+                "put": {
+                    "status": 200
+                },
+                "delete": {
+                    "status": 200
+                }
+            }
+        },
+        "api/:id": {
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "body": "{\"id\": 1, \"name\": \"service\"}"
+                }
+            }
+        },
+        "api/:nit/nit": {
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "body": "{\"nit\": 1, \"name\": \"service\"}"
+                }
+            }
+        },
+        "api/:cpf/cpf": {
+            "contentType": "application/json",
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "body": "{\"cpf\": 1, \"name\": \"service\"}"
+                }
+            }
         }
     }
 }
