@@ -144,6 +144,16 @@ func (r *routerFactory) createDynamic(c echo.Context, data *RouterSettings) (int
 			return plugin.Create()
 		}
 
+		if key == "jwt" {
+			plugin := &JWTPlugin{
+				Context:        c,
+				MockDir:        data.MockDir,
+				TemplateTokens: data.TemplateTokens,
+			}
+			mapstructure.Decode(input, plugin)
+			return plugin.Create()
+		}
+
 		break
 	}
 

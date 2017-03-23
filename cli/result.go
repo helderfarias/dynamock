@@ -31,7 +31,7 @@ func createSingleResult(data *RouterSettings) (int, interface{}) {
 
 	buffer := parseTemplate(data.TemplateTokens, result)
 
-	return data.Status, toJSON(buffer)
+	return data.Status, fromJsonToMap(buffer)
 }
 
 func loadContentFromFile(f string) string {
@@ -43,7 +43,7 @@ func loadContentFromFile(f string) string {
 	return string(content)
 }
 
-func toJSON(content string) interface{} {
+func fromJsonToMap(content string) interface{} {
 	var d interface{}
 	err := json.Unmarshal([]byte(content), &d)
 	if err != nil {
