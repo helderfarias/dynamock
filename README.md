@@ -182,6 +182,11 @@ curl -L https://github.com/helderfarias/dynamock/releases/download/v1.0/dynamock
     && rm dynamock.zip
 ```
 
+### Plugins
+
+* QrCode
+* Switch response
+* Random response
 
 ### Inspired
 https://github.com/gstroup/apimocker 
