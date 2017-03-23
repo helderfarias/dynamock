@@ -162,6 +162,21 @@ On startup, config values are loaded from the config.json file.
                     "bodyFile": "vars.json"
                 }
             }
+        },
+        "jwt": {
+            "responses": {
+                "get": {
+                    "dynamic": {
+                        "jwt": {
+                            "status": 200,
+                            "alg": "HS512",
+                            "payload": "{ \"sub\": \"sub\", \"iss\": \"https://jsbin.com\" }",
+                            "secret": "SECRET_KEY",
+                            "output": "{\"access_token_custom\": \"@token\"}"
+                        }
+                    }
+                }
+            }
         }
     }
 }
