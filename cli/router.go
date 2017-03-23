@@ -114,7 +114,8 @@ func (r *routerFactory) createDynamic(c echo.Context, data *RouterSettings) (int
 	for key, input := range data.Dynamic {
 		if key == "random" {
 			plugin := &RandomPlugin{
-				MockDir: data.MockDir,
+				MockDir:        data.MockDir,
+				TemplateTokens: data.TemplateTokens,
 			}
 
 			mapstructure.Decode(input, plugin)
@@ -123,9 +124,10 @@ func (r *routerFactory) createDynamic(c echo.Context, data *RouterSettings) (int
 
 		if key == "switch" {
 			plugin := &SwitchPlugin{
-				Context: c,
-				Input:   input,
-				MockDir: data.MockDir,
+				Context:        c,
+				Input:          input,
+				MockDir:        data.MockDir,
+				TemplateTokens: data.TemplateTokens,
 			}
 
 			return plugin.Create()
@@ -133,9 +135,10 @@ func (r *routerFactory) createDynamic(c echo.Context, data *RouterSettings) (int
 
 		if key == "qrcode" {
 			plugin := &QrCodePlugin{
-				Context:     c,
-				MockDir:     data.MockDir,
-				ContentType: data.ContentType,
+				Context:        c,
+				MockDir:        data.MockDir,
+				ContentType:    data.ContentType,
+				TemplateTokens: data.TemplateTokens,
 			}
 			mapstructure.Decode(input, plugin)
 			return plugin.Create()

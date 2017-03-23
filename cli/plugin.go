@@ -3,6 +3,7 @@ package cli
 import (
 	"log"
 	"math/rand"
+	"strconv"
 	"time"
 
 	"github.com/labstack/echo"
@@ -11,26 +12,29 @@ import (
 )
 
 type RandomPlugin struct {
-	Status   []int
-	Body     []string
-	BodyFile []string
-	MockDir  string
+	Status         []int
+	Body           []string
+	BodyFile       []string
+	MockDir        string
+	TemplateTokens map[string]string
 }
 
 type SwitchPlugin struct {
-	Input   interface{}
-	Context echo.Context
-	MockDir string
+	Input          interface{}
+	Context        echo.Context
+	MockDir        string
+	TemplateTokens map[string]string
 }
 
 type QrCodePlugin struct {
-	Status      int
-	Content     string
-	Quality     string
-	Size        int
-	Context     echo.Context
-	MockDir     string
-	ContentType string
+	Status         int
+	Content        string
+	Quality        string
+	Size           string
+	Context        echo.Context
+	MockDir        string
+	ContentType    string
+	TemplateTokens map[string]string
 }
 
 type Action struct {
@@ -54,9 +58,10 @@ func (r *RandomPlugin) Create() (int, interface{}) {
 	}
 
 	return createSingleResult(&RouterSettings{
-		Status:   status,
-		Body:     body,
-		BodyFile: makeBodyFile(r.MockDir, bodyFile),
+		Status:         status,
+		Body:           body,
+		TemplateTokens: r.TemplateTokens,
+		BodyFile:       makeBodyFile(r.MockDir, bodyFile),
 	})
 }
 
@@ -92,9 +97,10 @@ func (s *SwitchPlugin) Create() (int, interface{}) {
 		for _, action := range mapper[key] {
 			if action.If == value {
 				return createSingleResult(&RouterSettings{
-					Status:   action.When.Status,
-					Body:     action.When.Body,
-					BodyFile: makeBodyFile(s.MockDir, action.When.BodyFile),
+					Status:         action.When.Status,
+					Body:           action.When.Body,
+					TemplateTokens: s.TemplateTokens,
+					BodyFile:       makeBodyFile(s.MockDir, action.When.BodyFile),
 				})
 			}
 		}
@@ -116,16 +122,19 @@ func (q *QrCodePlugin) Create() (int, interface{}) {
 	}
 
 	status := q.Status
-	content := q.Content
+	content := parseTemplate(q.TemplateTokens, q.Content)
 	quality := levels["medium"]
 	size := 256
 
-	if q.Quality != "" {
-		quality = levels[q.Quality]
+	parseQuality := parseTemplate(q.TemplateTokens, q.Quality)
+	if levels[parseQuality] != 0 {
+		quality = levels[parseQuality]
 	}
 
-	if q.Size >= 56 {
-		size = q.Size
+	log.Println(q.Size)
+	parseSize := parseTemplate(q.TemplateTokens, q.Size)
+	if val, err := strconv.Atoi(parseSize); err == nil && val >= 256 {
+		size = val
 	}
 
 	png, err := qrcode.Encode(content, quality, size)
