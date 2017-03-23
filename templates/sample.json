@@ -154,6 +154,48 @@
                     "body": "{\"cpf\": 1, \"name\": \"service\"}"
                 }
             }
+        },
+        "api/qrcode": {
+            "contentType": "image/png",
+            "responses": {
+                 "get": {
+                    "dynamic": {
+                        "qrcode": {
+                            "status": 200,
+                            "quality": "highest",
+                            "size": 512,
+                            "content": "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJjcGYiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZGF0YU5hc2NpbWVudG8iOiIwNy8wMy8xOTgyIiwiY2FydGVpcmEiOiIxMjM0NTYiLCJuaSI6IjEyMzQ1Njc4OSJ9.b7ef9n68RWvNYF-T6VsU7rO-_DFdqkLrwEvQyx9ynGL4RrS1ZcEUdPPkTNGx5Mo-3rTcwX7AypxatNah1YVPvbVLot3tVn_-rNU87p6ulWtlcqZwzj7eoTRQYiL-nyZUFvizuIfOhc5SGf0F6gkoLbd9ch3XmtQ2uqxP0Q__ybs"
+                        }
+                    }
+                 }
+            }
+        },
+        "ping_latency": {
+            "latency": 1000,
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "body": "latency_2000"
+                }
+            }
+        },
+        "/api/:id/vars": {
+            "latency": 10,
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "body": "@id @cpf (params and queryparams)"
+                }
+            }
+        },
+        "/api/:id/vars/file": {
+            "latency": 10,
+            "responses": {
+                "get": {
+                    "status": 200,
+                    "bodyFile": "vars.json"
+                }
+            }
         }
     }
 }

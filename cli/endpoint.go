@@ -15,7 +15,7 @@ func (e *EndpointFactory) register(router RouterFactory) {
 			Uri:         e.uri,
 			ContentType: e.getContentType(),
 			Status:      resp.Status,
-			Latency:     e.latency,
+			Latency:     e.getLatency(),
 			Body:        resp.Body,
 			BodyFile:    resp.BodyFile,
 			Dynamic:     resp.Dynamic,
@@ -41,8 +41,18 @@ func (e *EndpointFactory) register(router RouterFactory) {
 	}
 }
 
+func (e *EndpointFactory) getLatency() int {
+	latency := e.latency
+
+	if e.service.Latency != 0 {
+		latency = e.service.Latency
+	}
+
+	return latency
+}
+
 func (e *EndpointFactory) getContentType() string {
-	var contentType string
+	contentType := "text/plain"
 
 	if len(e.service.ContentType) > 0 {
 		contentType = e.service.ContentType

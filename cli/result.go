@@ -21,30 +21,34 @@ func makeBodyFile(mockDir string, bodyFile string) string {
 }
 
 func createSingleResult(data *RouterSettings) (int, interface{}) {
-	var result interface{}
+	var result string
 
 	if len(data.Body) == 0 {
-		result = parseFile(makeBodyFile(data.MockDir, data.BodyFile))
+		result = loadContentFromFile(makeBodyFile(data.MockDir, data.BodyFile))
 	} else {
 		result = data.Body
 	}
 
-	return data.Status, result
+	buffer := parseTemplate(data.TemplateTokens, result)
+
+	return data.Status, toJSON(buffer)
 }
 
-func parseFile(f string) interface{} {
+func loadContentFromFile(f string) string {
 	content, err := ioutil.ReadFile(f)
 	if err != nil {
 		log.Println(err)
 		return ""
 	}
+	return string(content)
+}
 
+func toJSON(content string) interface{} {
 	var d interface{}
-	err = json.Unmarshal(content, &d)
+	err := json.Unmarshal([]byte(content), &d)
 	if err != nil {
 		log.Println(err)
 		return ""
 	}
-
 	return d
 }

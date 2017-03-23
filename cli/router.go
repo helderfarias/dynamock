@@ -15,15 +15,16 @@ type RouterFactory interface {
 }
 
 type RouterSettings struct {
-	Uri         string
-	ContentType string
-	Status      int
-	Body        string
-	BodyFile    string
-	Latency     int
-	Dynamic     map[string]interface{}
-	Headers     map[string]string
-	MockDir     string
+	Uri            string
+	ContentType    string
+	Status         int
+	Body           string
+	BodyFile       string
+	Latency        int
+	Dynamic        map[string]interface{}
+	Headers        map[string]string
+	MockDir        string
+	TemplateTokens map[string]string
 }
 
 type routerFactory struct {
@@ -71,6 +72,8 @@ func (r *routerFactory) CreateDELETE(data *RouterSettings) {
 }
 
 func (r *routerFactory) execute(c echo.Context, data *RouterSettings) {
+	data.TemplateTokens = r.parseTemplateTokens(c)
+
 	if data.ContentType == "application/json" {
 		if len(data.Dynamic) > 0 {
 			c.JSON(r.createDynamic(c, data))
@@ -81,7 +84,30 @@ func (r *routerFactory) execute(c echo.Context, data *RouterSettings) {
 		return
 	}
 
+	if data.ContentType == "image/png" {
+		if len(data.Dynamic) > 0 {
+			status, content := r.createDynamic(c, data)
+			c.Blob(status, "image/png", content.([]byte))
+			return
+		}
+		return
+	}
+
 	c.String(data.Status, data.Body)
+}
+
+func (r *routerFactory) parseTemplateTokens(c echo.Context) map[string]string {
+	tokens := map[string]string{}
+
+	for _, name := range c.ParamNames() {
+		tokens["@"+name] = c.Param(name)
+	}
+
+	for key, value := range c.QueryParams() {
+		tokens["@"+key] = value[0]
+	}
+
+	return tokens
 }
 
 func (r *routerFactory) createDynamic(c echo.Context, data *RouterSettings) (int, interface{}) {
@@ -102,6 +128,16 @@ func (r *routerFactory) createDynamic(c echo.Context, data *RouterSettings) (int
 				MockDir: data.MockDir,
 			}
 
+			return plugin.Create()
+		}
+
+		if key == "qrcode" {
+			plugin := &QrCodePlugin{
+				Context:     c,
+				MockDir:     data.MockDir,
+				ContentType: data.ContentType,
+			}
+			mapstructure.Decode(input, plugin)
 			return plugin.Create()
 		}
 

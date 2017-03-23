@@ -1,11 +1,13 @@
 package cli
 
 import (
+	"log"
 	"math/rand"
 	"time"
 
 	"github.com/labstack/echo"
 	"github.com/mitchellh/mapstructure"
+	qrcode "github.com/skip2/go-qrcode"
 )
 
 type RandomPlugin struct {
@@ -19,6 +21,16 @@ type SwitchPlugin struct {
 	Input   interface{}
 	Context echo.Context
 	MockDir string
+}
+
+type QrCodePlugin struct {
+	Status      int
+	Content     string
+	Quality     string
+	Size        int
+	Context     echo.Context
+	MockDir     string
+	ContentType string
 }
 
 type Action struct {
@@ -89,4 +101,37 @@ func (s *SwitchPlugin) Create() (int, interface{}) {
 	}
 
 	return 404, "action not found"
+}
+
+func (q *QrCodePlugin) Create() (int, interface{}) {
+	if q.ContentType != "image/png" {
+		log.Fatalln("ContentType invalid. The qrcode plugin supports 'image/png' only.")
+		return 0, nil
+	}
+
+	levels := map[string]qrcode.RecoveryLevel{
+		"low":    qrcode.Low,
+		"medium": qrcode.Medium,
+		"high":   qrcode.Highest,
+	}
+
+	status := q.Status
+	content := q.Content
+	quality := levels["medium"]
+	size := 256
+
+	if q.Quality != "" {
+		quality = levels[q.Quality]
+	}
+
+	if q.Size >= 56 {
+		size = q.Size
+	}
+
+	png, err := qrcode.Encode(content, quality, size)
+	if err != nil {
+		log.Println(err)
+	}
+
+	return status, png
 }

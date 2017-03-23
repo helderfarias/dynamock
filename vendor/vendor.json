@@ -75,6 +75,24 @@
 			"revisionTime": "2017-01-25T05:19:37Z"
 		},
 		{
+			"checksumSHA1": "l92ZNNpsqR/eht04a/PMDYsJqII=",
+			"path": "github.com/skip2/go-qrcode",
+			"revision": "cf02323edc040f5263d08b45a60bc8abdc3bde18",
+			"revisionTime": "2016-12-31T17:30:31Z"
+		},
+		{
+			"checksumSHA1": "xkuxp8PnGrQUsIXMiIOCk4U5IGw=",
+			"path": "github.com/skip2/go-qrcode/bitset",
+			"revision": "cf02323edc040f5263d08b45a60bc8abdc3bde18",
+			"revisionTime": "2016-12-31T17:30:31Z"
+		},
+		{
+			"checksumSHA1": "UtPg/z5chOpfiJvr29Or0oUx1Bs=",
+			"path": "github.com/skip2/go-qrcode/reedsolomon",
+			"revision": "cf02323edc040f5263d08b45a60bc8abdc3bde18",
+			"revisionTime": "2016-12-31T17:30:31Z"
+		},
+		{
 			"checksumSHA1": "5q4Lyr1RgyO9j66pTmz1M63rQvs=",
 			"path": "github.com/tylerb/graceful",
 			"revision": "d72b0151351a13d0421b763b88f791469c4f5dc7",
