@@ -184,17 +184,19 @@ On startup, config values are loaded from the config.json file.
 
 ### Usage
 ```bash
+# step 1 - build docker
+make docker
+
 # compose
 docker-compose up -d
-
-# docker
-docker build -t dynamock .
-docker run -d -p 3010:3010 dynamock
 
 # binary
 curl -L https://github.com/helderfarias/dynamock/releases/download/v1.0/dynamock_darwin_osx.zip > dynamock.zip \
     && unzip dynamock.zip \
     && rm dynamock.zip
+
+# shell
+docker run --rm -ti -v $PWD/templates:/etc/config helderfarias/dynamock -c /etc/config/basic.json
 ```
 
 ### Plugins
