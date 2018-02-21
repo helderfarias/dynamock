@@ -11,11 +11,13 @@ import (
 	settings "github.com/codegangsta/cli"
 )
 
+var version string
+
 func main() {
 	app := settings.NewApp()
 	app.Name = path.Base(os.Args[0])
 	app.Usage = "Dynamic Mock for Api Rest"
-	app.Version = "1.0.0"
+	app.Version = version
 
 	app.Flags = []settings.Flag{
 		settings.StringFlag{

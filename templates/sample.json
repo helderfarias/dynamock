@@ -164,7 +164,7 @@
                             "status": 200,
                             "quality": "@quality",
                             "size": "@size",
-                            "content": "http://www.jsbin.com"
+                            "content": "@code"
                         }
                     }
                  }

@@ -1,38 +1,59 @@
-GO_WORKSPACE := '/go/src/github.com/helderfarias/dynamock'
+# General
+PKG_LIST_ALL_TESTS	:= $(shell go list ./... | grep -v /vendor)
+GIT_BRANCH			:= $(shell git symbolic-ref HEAD | sed -e 's/^refs\/heads\///')
+GIT_LAST_COMMIT		:= $(shell git rev-parse --short HEAD)
 
-default: clean build
+# Version
+VMAJOR_MINOR 		:= $(or ${VMAJOR_MINOR}, ${GIT_BRANCH})
+VBUILD 				:= $(or ${VBUILD}, 0)
+VREV 				:= $(or ${VREV}, ${GIT_LAST_COMMIT})
+VERSION				:= "$(VMAJOR_MINOR).$(VBUILD).$(shell echo ${VREV} | cut -c 1-8)"
 
-clean:
-	@echo "Clean all..."
-	@rm dynamock_*.zip || true
-	@rm dynamock || true
-	@rm dynamock.exe || true
 
-build: linux_32 windows_32 windows_64 darwin_osx
-	@echo "Complete"
+all: help
+
+version:
+	@echo "$(VERSION)"
+
+static:
+	@echo ">> runnung static analysis"
+	@go get -v honnef.co/go/tools/cmd/staticcheck
+	@cd api && staticcheck . && cd ..
+
+ast:
+	@echo ">> inspecting source code for security problems"
+	@go get -v github.com/GoASTScanner/gas/cmd/gas/...
+	@cd api && gas . && cd ..
+
+test:
+	@echo ">> running unit tests"
+	@go test -cover $(PKG_LIST_ALL_TESTS)
+
+build: build_alpine
 
 docker:
-	@echo "Building for alpine linux..."
-	@docker run --rm -ti -v $(PWD):$(GO_WORKSPACE) -w $(GO_WORKSPACE) helderfarias/go:1.8-alpine go build -o dynamock_alpine
-	@docker build -t helderfarias/dynamock .
-	@rm -f dynamock_alpine || true
+	@echo ">> docker image"
+	docker build -t helderfarias/dynamock .
 
-linux_64:
-	@echo "Building for linux 64bits..."
-	@GOOS=linux GOARCH=amd64 go build && zip dynamock_linux_64.zip dynamock
+build_alpine:
+	@echo ">> release for linux alpine"
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=$(VERSION)" -a -installsuffix cgo -o release/alpine/dynamock
 
-linux_32:
-	@echo "Building for linux 32bits..."
-	@GOOS=linux GOARCH=386 go build && zip dynamock_linux_32.zip dynamock
+build_linux:
+	@echo ">> release for linux"
+	GOOS=linux GOARCH=amd64 go build -ldflags "-X main.version=$(VERSION)" -o release/linux/dynamock
 
-windows_32:
-	@echo "Building for windows 32bits..."
-	@GOOS=windows GOARCH=386 go build && zip dynamock_windows_32.zip dynamock.exe
+build_osx:
+	@echo ">> release for osx"
+	GOOS=darwin go build -ldflags "-X main.version=$(VERSION)" -o release/osx/dynamock
 
-windows_64:
-	@echo "Building for windows 64bits..."
-	@GOOS=windows GOARCH=amd64 go build && zip dynamock_windows_64.zip dynamock.exe
-
-darwin_osx:
-	@echo "Building for Darwin/OSX"
-	@GOOS=darwin go build && zip dynamock_darwin_osx.zip dynamock
+help:
+	@echo 'Usage: '
+	@echo ''
+	@echo 'make build'
+	@echo 'make test'
+	@echo 'make ast'
+	@echo 'make static'
+	@echo 'make build_alpine'
+	@echo 'make build_linux'
+	@echo 'make build_osx'
