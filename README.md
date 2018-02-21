@@ -204,6 +204,7 @@ docker run --rm -ti -v $PWD/templates:/etc/config helderfarias/dynamock -c /etc/
 * QrCode
 * Switch response
 * Random response
+* JWT response
 
 ### Inspired
 https://github.com/gstroup/apimocker 
